@@ -1,7 +1,114 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
+
+const launchOfferEndsAt = new Date(Date.now() + 1000 * 60 * 60 * 24); // +24h
 ---
 
 <Layout>
-	<h1 class="text-indigo-600">test</h1>
+	<div class="bg-white text-neutral-900">
+		<section
+			class="container mx-auto px-4 md:px-8 pt-24 md:pt-32 pb-8 md:pb-12"
+		>
+			<div
+				class="mx-auto flex w-full max-w-4xl flex-col items-center text-center"
+			>
+				<div
+					class="mb-6 flex h-12 w-12 items-center justify-center rounded-full bg-neutral-100"
+				>
+					<img
+						src="/src/assets/img/logotavue2.webp"
+						alt="logo TaVue"
+					/>
+				</div>
+
+				<h1
+					class="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight text-neutral-90 mb-10"
+				>
+					Bienvenue chez TaVue
+				</h1>
+
+				<p
+					class="mt-4 max-w-2xl text-base md:text-lg leading-7 text-neutral-600"
+				>
+					Créez vos lunettes sur mesure, conçues et fabriquées en
+					France avec des matériaux d'exception. Un style raffiné et
+					minimaliste pour une expérience unique.
+				</p>
+
+				<p class="mt-4 text-lg text-neutral-600">
+					Plus de 500 paires uniques déjà créées. Configurez la vôtre
+					en 3 minutes.
+				</p>
+
+				<div class="mt-10 grid w-full grid-cols-1 gap-8 sm:grid-cols-3">
+					<div class="text-center">
+						<div class="text-base font-semibold text-neutral-900">
+							Fabrication française
+						</div>
+						<p class="mt-2 text-base leading-5 text-neutral-600">
+							Conçues et assemblées dans nos ateliers en France
+						</p>
+					</div>
+					<div class="text-center">
+						<div class="text-base font-semibold text-neutral-900">
+							Matériaux premium
+						</div>
+						<p class="mt-2 text-base leading-5 text-neutral-600">
+							Acétate, titane, bois de chêne et fibre de carbone
+						</p>
+					</div>
+					<div class="text-center">
+						<div class="text-base font-semibold text-neutral-900">
+							Sur mesure
+						</div>
+						<p class="mt-2 text-base leading-5 text-neutral-600">
+							Personnalisez chaque détail de vos lunettes
+						</p>
+					</div>
+				</div>
+
+				<div class="mt-15 mb-10">
+					<a
+						href="/configurateur"
+						class="inline-flex items-center justify-center rounded-md bg-[#1f3c7a] px-6 py-3 text-sm font-medium text-white shadow-sm hover:bg-[#1b356c] transition"
+					>
+						Commencer ma création
+					</a>
+				</div>
+			</div>
+		</section>
+
+		<section class="bg-[#1f3c7a] text-white mb-25">
+			<div class="container mx-auto px-4 md:px-8 py-4 text-center">
+				<p id="offer-text" class="text-sm md:text-base">
+					Offre de lancement : -20% sur votre première paire — Expire
+					dans <span id="countdown" class="font-semibold"
+						>24h 00min 00s</span
+					>
+				</p>
+			</div>
+		</section>
+	</div>
+
+	<script define:vars={{ endTime: launchOfferEndsAt.getTime() }}>
+		const end = new Date(endTime);
+		const el = document.getElementById("countdown");
+		const text = document.getElementById("offer-text");
+
+		function update() {
+			const diff = end - new Date();
+			if (diff <= 0) {
+				if (text) text.textContent = "Offre de lancement terminée";
+				return clearInterval(timer);
+			}
+			const h = Math.floor(diff / 36e5);
+			const m = Math.floor((diff % 36e5) / 6e4);
+			const s = Math.floor((diff % 6e4) / 1000);
+			if (el)
+				el.textContent = `${h}h ${m.toString().padStart(2, "0")}min ${s.toString().padStart(2, "0")}s`;
+		}
+
+		const timer = setInterval(update, 1000);
+		update();
+	</script>
 </Layout>
