@@ -1,0 +1,85 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import pb from "../../utils/pb";
+import { Collections, type LunetteRecord } from "../../utils/pocketbase-types";
+
+const id = Astro.params.id;
+
+if (!id) {
+    return Astro.redirect("/gallery");
+}
+
+let lunette: LunetteRecord;
+
+try {
+    lunette = await pb.collection(Collections.Lunette).getOne(id);
+} catch (error) {
+    console.error("Erreur lors de la récupération du design :", error);
+    return Astro.redirect("/gallery");
+}
+---
+
+<Layout title={lunette?.nom_svg || "Design SVG"}>
+    <main class="container mx-auto px-4 md:px-8 pt-20 pb-16">
+        <!-- Header -->
+        <a
+            href="/gallery"
+            class="inline-flex items-center gap-2 text-[#1f3c7a] hover:text-[#1b356c] font-semibold mb-8 transition mt-8"
+        >
+            <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 19l-7-7 7-7"></path>
+            </svg>
+            Retour à la galerie
+        </a>
+
+        <div
+            class="mx-auto flex w-full max-w-4xl flex-col items-center text-center mb-12"
+        >
+            <h1
+                class="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight text-[#1f3c7a] mb-6"
+            >
+                {lunette?.nom_svg || "Design sans nom"}
+            </h1>
+        </div>
+
+        <!-- SVG Card -->
+        <div class="mx-auto max-w-4xl">
+            <div
+                class="bg-white rounded-lg p-8 border border-neutral-200 shadow-sm mb-8"
+            >
+                <h2 class="text-xl font-semibold text-neutral-900 mb-4">
+                    Aperçu SVG
+                </h2>
+                <div
+                    id="svg-display"
+                    class="bg-neutral-100 rounded-lg p-8 flex items-center justify-center min-h-80"
+                >
+                    <div
+                        set:html={lunette?.code_svg}
+                        class="max-w-full max-h-full"
+                    />
+                </div>
+            </div>
+        </div>
+    </main>
+</Layout>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const svgDisplay = document.getElementById("svg-display");
+        if (svgDisplay) {
+            svgDisplay.addEventListener("click", () => {
+                window.location.href = "/gallery";
+            });
+        }
+    });
+</script>

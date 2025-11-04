@@ -1,0 +1,139 @@
+---
+import pb from "../../utils/pb";
+import { Collections } from "../../utils/pocketbase-types";
+import Layout from "../../layouts/Layout.astro";
+
+export const prerender = false;
+
+let lunettes = [];
+
+try {
+    lunettes = await pb.collection(Collections.Lunette).getFullList(200, {
+        sort: "-created",
+    });
+} catch (error) {
+    console.error("Erreur lors de la récupération des SVGs :", error);
+}
+---
+
+<Layout title="Ma Galerie SVG">
+    <main class="container mx-auto px-4 md:px-8 pt-20 pb-16">
+        <!-- Header -->
+        <div class="mb-12">
+            <a
+                href="/generator"
+                class="inline-flex items-center gap-2 text-[#1f3c7a] hover:text-[#1b356c] font-semibold mb-8 transition mt-8"
+            >
+                <svg
+                    class="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15 19l-7-7 7-7"></path>
+                </svg>
+                Retour au générateur
+            </a>
+            <div
+                class="mx-auto flex w-full max-w-4xl flex-col items-center text-center"
+            >
+                <h1
+                    class="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight text-[#1f3c7a] mb-6"
+                >
+                    Ma Galerie SVG
+                </h1>
+                <p
+                    class="mt-4 max-w-2xl text-base md:text-lg leading-7 text-neutral-600"
+                >
+                    Retrouvez tous vos designs créés avec l'IA
+                </p>
+            </div>
+        </div>
+
+        <!-- Gallery Grid -->
+        {
+            lunettes.length > 0 ? (
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {lunettes.map((lunette) => (
+                        <div
+                            class="card bg-white rounded-lg p-6 border border-neutral-200 shadow-sm hover:shadow-lg transition cursor-pointer group"
+                            data-svg-id={lunette.id}
+                        >
+                            <h3 class="text-lg font-semibold text-neutral-900 mb-4 truncate">
+                                {lunette?.nom_svg || "Design sans nom"}
+                            </h3>
+
+                            <div class="bg-neutral-100 rounded-lg p-4 flex items-center justify-center h-48 mb-4">
+                                <div
+                                    set:html={lunette?.code_svg}
+                                    class="max-w-full max-h-full"
+                                />
+                            </div>
+
+                            <p class="text-sm text-neutral-600 text-center group-hover:text-[#1f3c7a] transition">
+                                Cliquez pour voir les détails
+                            </p>
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <div class="bg-white rounded-lg p-12 border border-neutral-200 shadow-sm text-center">
+                    <svg
+                        class="w-16 h-16 mx-auto text-neutral-400 mb-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                        />
+                    </svg>
+                    <p class="text-lg text-neutral-600 mb-6">
+                        Vous n'avez pas encore créé de design
+                    </p>
+                    <a
+                        href="/generator"
+                        class="inline-flex items-center gap-2 bg-gradient-to-r from-[#1f3c7a] to-[#2a4ba8] hover:from-[#1b356c] hover:to-[#244a95] text-white font-semibold py-3 px-6 rounded-md transition duration-200"
+                    >
+                        <svg
+                            class="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M12 4v16m8-8H4"
+                            />
+                        </svg>
+                        Créer mon premier design
+                    </a>
+                </div>
+            )
+        }
+    </main>
+</Layout>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const cards = document.querySelectorAll(".card[data-svg-id]");
+
+        cards.forEach((card) => {
+            card.addEventListener("click", () => {
+                const svgId = card.getAttribute("data-svg-id");
+                if (svgId) {
+                    window.location.href = `/gallery/${svgId}`;
+                }
+            });
+        });
+    });
+</script>
