@@ -1,0 +1,99 @@
+---
+
+---
+
+<header
+    class="sticky top-0 z-50 bg-white/80 backdrop-blur border-b border-neutral-200/60 shadow-[0_6px_24px_-4px_rgba(0,0,0,0.25),0_2px_6px_rgba(0,0,0,0.12)]"
+>
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="flex h-16 items-center">
+            <a href="/" class="flex items-center">
+                <img
+                    src="/src/assets/img/logotavue.webp"
+                    alt="
+                    Logo
+                    TaVue"
+                    class="h-7 w-auto select-none"
+                />
+            </a>
+
+            <div class="ml-auto"></div>
+
+            <nav class="hidden md:flex items-center gap-8">
+                <a
+                    href="/configurateur"
+                    class="text-sm text-neutral-700 hover:text-neutral-900 transition-colors"
+                >
+                    Configurateur
+                </a>
+                <a
+                    href="/mes-creations"
+                    class="text-sm text-neutral-700 hover:text-neutral-900 transition-colors"
+                >
+                    Mes créations
+                </a>
+                <a
+                    href="/auth"
+                    class="inline-flex items-center rounded-full border border-neutral-300 px-3 py-1.5 text-sm text-neutral-800 hover:bg-neutral-100 transition"
+                >
+                    Se connecter
+                </a>
+            </nav>
+
+            <button
+                id="menu-btn"
+                class="md:hidden ml-3 inline-flex items-center justify-center rounded-md p-2 text-neutral-700 hover:bg-neutral-100 focus:outline-none"
+                aria-label="Ouvrir le menu"
+                aria-expanded="false"
+            >
+                <svg
+                    class="h-6 w-6"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                >
+                    <path
+                        d="M4 7h16M4 12h16M4 17h16"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div
+        id="mobile-menu"
+        class="md:hidden hidden border-t border-neutral-200 bg-white/95 backdrop-blur"
+    >
+        <div class="space-y-1 px-4 py-3">
+            <a
+                href="/configurateur"
+                class="block rounded px-3 py-2 text-sm text-neutral-800 hover:bg-neutral-100"
+                >Configurateur</a
+            >
+            <a
+                href="/mes-creations"
+                class="block rounded px-3 py-2 text-sm text-neutral-800 hover:bg-neutral-100"
+                >Mes créations</a
+            >
+            <a
+                href="/auth"
+                class="mt-1 block rounded px-3 py-2 text-sm text-neutral-800 hover:bg-neutral-100"
+                >Se connecter</a
+            >
+        </div>
+    </div>
+
+    <script is:inline>
+        const btn = document.getElementById("menu-btn");
+        const menu = document.getElementById("mobile-menu");
+        if (btn && menu) {
+            btn.addEventListener("click", () => {
+                const isOpen = !menu.classList.contains("hidden");
+                menu.classList.toggle("hidden");
+                btn.setAttribute("aria-expanded", String(!isOpen));
+            });
+        }
+    </script>
+</header>
