@@ -1,0 +1,219 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+export const prerender = false;
+---
+
+<Layout title="titre">
+    <main class="container mx-auto px-4 md:px-8 pt-20">
+        <h1
+            class="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight text-[#1f3c7a] mb-15 pt-10"
+        >
+            Générateur SVG
+        </h1>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- Code SVG -->
+            <div
+                class="bg-white rounded-lg p-8 border border-neutral-200 shadow-sm"
+            >
+                <h2 class="text-xl font-semibold text-neutral-900 mb-4">
+                    Code SVG
+                </h2>
+                <pre
+                    id="svg-output"
+                    class="rounded p-4 bg-white border border-neutral-300 overflow-auto h-72 mt-4 font-mono text-sm text-neutral-900"><code /></pre>
+            </div>
+
+            <!-- SVG Preview -->
+            <div
+                class="bg-white rounded-lg p-8 border border-neutral-200 shadow-sm"
+            >
+                <h2 class="text-xl font-semibold text-neutral-900 mb-4">
+                    Aperçu SVG
+                </h2>
+                <div
+                    id="svg-container"
+                    class="mt-4 flex items-center justify-center bg-neutral-100 rounded-lg h-72 p-4"
+                >
+                </div>
+            </div>
+        </div>
+
+        <!-- Prompt -->
+        <div
+            class="bg-white rounded-lg p-8 border border-neutral-200 shadow-sm mb-8"
+        >
+            <h2 class="text-xl font-semibold text-neutral-900 mb-4">Prompt</h2>
+            <textarea
+                id="user-prompt"
+                class="w-full px-4 py-3 border border-neutral-300 rounded-md bg-white text-neutral-900 focus:outline-none focus:ring-2 focus:ring-[#1f3c7a] focus:border-transparent resize-none h-40 mb-4"
+                placeholder="Décrivez le SVG que vous souhaitez générer..."
+            ></textarea>
+            <button
+                id="generate-button"
+                class="bg-gradient-to-r from-[#1f3c7a] to-[#2a4ba8] hover:from-[#1b356c] hover:to-[#244a95] text-white font-semibold py-3 px-6 rounded-md transition duration-200 flex items-center justify-center gap-2 w-full"
+            >
+                <svg
+                    class="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+                Générer
+            </button>
+
+            <div class="flex gap-4 mt-6">
+                <button
+                    id="edit-button"
+                    class="flex-1 bg-[#1f3c7a] hover:bg-[#1b356c] text-white font-semibold py-3 px-6 rounded-md transition duration-200"
+                >
+                    Modifier
+                </button>
+                <button
+                    id="save-button"
+                    class="flex-1 bg-[#1f3c7a] hover:bg-[#1b356c] text-white font-semibold py-3 px-6 rounded-md transition duration-200"
+                >
+                    Enregistrer
+                </button>
+            </div>
+        </div>
+
+        <div
+            class="bg-white rounded-lg p-8 border border-neutral-200 shadow-sm mb-25"
+        >
+            <h2 class="text-xl font-semibold text-neutral-900 mb-4">
+                Gallerie
+            </h2>
+            <div class="mt-8">
+                <p class="text-neutral-600 text-center mb-10">
+                    Retrouvez tous vos designs dans votre galerie personnelle
+                </p>
+                <a
+                    href="/gallery"
+                    class="block w-full bg-gradient-to-r from-[#1f3c7a] to-[#2a4ba8] hover:from-[#1b356c] hover:to-[#244a95] text-white font-semibold py-3 px-6 rounded-md transition duration-200 text-center"
+                >
+                    Accéder à ma galerie
+                </a>
+            </div>
+        </div>
+    </main>
+</Layout>
+
+<script>
+    //@ts-nocheck
+
+    async function generateSVG(prompt) {
+        console.log("Generating SVG for prompt:", prompt);
+        const res = await fetch("/api/generateSVG", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(prompt),
+        });
+        const data = await res.json();
+        return data.svg;
+    }
+
+    async function handleSubmit() {
+        let prompt = "";
+        let aiResponse = "";
+        const promptElement = document.getElementById("user-prompt");
+        prompt = promptElement ? promptElement.value : "";
+        console.log("submitted: ", prompt);
+        promptList.length = 0;
+        promptList.push({ role: "user", content: prompt });
+        const svgContainer = document.getElementById("svg-container");
+        svgContainer.innerHTML = `<span class="loading loading-ring loading-xl"></span>`;
+        generateButton.disabled = true;
+        editButton.disabled = true;
+        let svgOutput = document.getElementById("svg-output");
+        aiResponse = await generateSVG(promptList);
+        const svgMatch = aiResponse.content.match(/<svg[\s\S]*?<\/svg>/i);
+        aiResponse.content = svgMatch ? svgMatch[0] : "";
+        console.log("svgCode: ", aiResponse.content);
+        promptList.push(aiResponse);
+        svgOutput.textContent = aiResponse.content;
+        svgContainer.innerHTML = aiResponse.content;
+        generateButton.disabled = false;
+        editButton.disabled = false;
+    }
+
+    const generateButton = document.getElementById("generate-button");
+    if (generateButton) {
+        generateButton.addEventListener("click", handleSubmit);
+    }
+
+    let promptList = [];
+
+    const editButton = document.getElementById("edit-button");
+
+    async function handleEdit() {
+        let prompt = "";
+        let aiResponse = "";
+        const promptElement = document.getElementById("user-prompt");
+        prompt = promptElement ? promptElement.value : "";
+        console.log("Prompt soumis : ", prompt);
+        promptList.push({ role: "user", content: prompt });
+        const svgContainer = document.getElementById("svg-container");
+        svgContainer.innerHTML += `<span class="loading loading-ring loading-xl"></span>`;
+        generateButton.disabled = true;
+        editButton.disabled = true;
+        let svgOutput = document.getElementById("svg-output");
+        aiResponse = await generateSVG(promptList);
+        const svgMatch = aiResponse.content.match(/<svg[\s\S]*?<\/svg>/i);
+        aiResponse.content = svgMatch ? svgMatch[0] : "";
+        console.log("Code SVG généré : ", aiResponse.content);
+        promptList.push(aiResponse);
+        svgOutput.textContent = aiResponse.content;
+        svgContainer.innerHTML = aiResponse.content;
+        generateButton.disabled = false;
+        editButton.disabled = false;
+        console.log("Historique des prompts : ", promptList);
+    }
+
+    if (editButton) {
+        editButton.addEventListener("click", handleEdit);
+    }
+
+    const saveButton = document.getElementById("save-button");
+
+    async function saveSVG(params) {
+        const res = await fetch("/api/saveSVG", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(params),
+        });
+        return await res.json();
+    }
+
+    if (saveButton) {
+        saveButton.addEventListener("click", async () => {
+            const name = prompt("Donnez un nom à votre création :");
+            const svgOutput =
+                document.getElementById("svg-output")?.textContent;
+            console.log(
+                "Préparation de la sauvegarde :",
+                JSON.stringify(svgOutput),
+            );
+
+            const params = {
+                nom_svg: name,
+                code_svg: svgOutput || "<svg></svg>",
+                chat_history: JSON.stringify(promptList),
+            };
+
+            const result = await saveSVG(params);
+            if (result.success) {
+                alert("SVG sauvegardé avec succès !");
+            } else {
+                alert("Erreur lors de la sauvegarde : " + result.error);
+            }
+        });
+    }
+</script>
