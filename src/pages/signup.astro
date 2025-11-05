@@ -107,7 +107,7 @@ if (Astro.locals.user) {
         const formData = new FormData(form);
 
         try {
-            const res = await fetch("/api/signup", {
+            const res = await fetch("/api2/signup", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

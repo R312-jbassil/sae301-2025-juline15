@@ -2,6 +2,7 @@ Utilisateurs de la collection Users :
 
 login :                                 mot de passe :
 juline.test@gmail.com                   Julinetest1234
+test.utilisateur@gmail.com              Testutilisateur12
 
 
 

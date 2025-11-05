@@ -452,7 +452,7 @@ import Layout from "../layouts/Layout.astro";
 
                     console.log("💾 Enregistrement:", data);
 
-                    const response = await fetch("/api/saveSVG", {
+                    const response = await fetch("/api2/saveSVG", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(data),

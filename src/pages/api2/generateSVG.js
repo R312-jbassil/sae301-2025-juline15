@@ -1,4 +1,4 @@
-// src/pages/api/generate-svg.js
+// src/pages/api2/generate-svg.js
 import { OpenAI } from 'openai';
 
 // Récupération du token d'accès à partir des variables d'environnement

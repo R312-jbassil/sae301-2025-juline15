@@ -92,7 +92,7 @@ if (Astro.locals.user) {
         try {
             console.log("📤 Avant la requête - Cookies:", document.cookie);
 
-            const res = await fetch("/api/login", {
+            const res = await fetch("/api2/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

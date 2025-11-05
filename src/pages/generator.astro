@@ -124,7 +124,7 @@ export const prerender = false;
 
     async function generateSVG(prompt) {
         console.log("Generating SVG for prompt:", prompt);
-        const res = await fetch("/api/generateSVG", {
+        const res = await fetch("/api2/generateSVG", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(prompt),
@@ -197,7 +197,7 @@ export const prerender = false;
     const saveButton = document.getElementById("save-button");
 
     async function saveSVG(params) {
-        const res = await fetch("/api/saveSVG", {
+        const res = await fetch("/api2/saveSVG", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(params),

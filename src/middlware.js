@@ -26,7 +26,7 @@ export const onRequest = async (context, next) => {
     console.log("🔍 [MIDDLEWARE] context.locals.user:", context.locals.user ? "✓ " + context.locals.user.email : "✗");
 
     // ✅ Les routes API passent toujours (même sans user)
-    if (context.url.pathname.startsWith("/api/")) {
+    if (context.url.pathname.startsWith("/api2/")) {
         console.log("🔓 [MIDDLEWARE] Route API");
         return next();
     }
