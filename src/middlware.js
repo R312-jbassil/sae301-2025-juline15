@@ -1,15 +1,10 @@
 export const onRequest = async (context, next) => {
     console.log("🔍 [MIDDLEWARE] Appelé pour:", context.url.pathname);
 
-    // ✅ IMPORTANT : Exclure les routes API de la vérification
-    if (context.url.pathname.startsWith("/api/")) {
-        console.log("🔓 [MIDDLEWARE] Route API, pas de vérification");
-        return next();
-    }
-
     const cookieValue = context.cookies.get("pb_auth")?.value;
     console.log("🔍 [MIDDLEWARE] Cookie pb_auth:", cookieValue ? "✓" : "✗");
 
+    // ✅ Charger l'utilisateur pour TOUTES les routes (y compris les API)
     if (cookieValue) {
         try {
             const { default: PocketBase } = await import("pocketbase");
@@ -30,6 +25,13 @@ export const onRequest = async (context, next) => {
 
     console.log("🔍 [MIDDLEWARE] context.locals.user:", context.locals.user ? "✓ " + context.locals.user.email : "✗");
 
+    // ✅ Les routes API passent toujours (même sans user)
+    if (context.url.pathname.startsWith("/api/")) {
+        console.log("🔓 [MIDDLEWARE] Route API");
+        return next();
+    }
+
+    // ✅ Vérification d'authentification SEULEMENT pour les pages
     const publicRoutes = ['/login', '/signup', '/'];
     if (!context.locals.user && !publicRoutes.includes(context.url.pathname)) {
         console.log("🔒 [MIDDLEWARE] Redirection -> /login");
