@@ -1,0 +1,139 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+if (Astro.locals.user) {
+    return Astro.redirect("/");
+}
+---
+
+<Layout>
+    <div class="min-h-screen flex flex-col items-center justify-center px-4">
+        <div class="w-full max-w-md">
+            <!-- Header -->
+            <div class="text-center mb-12">
+                <h1
+                    class="text-3xl md:text-4xl font-semibold tracking-tight text-[#1f3c7a] mb-4"
+                >
+                    Créer un compte
+                </h1>
+                <p class="text-neutral-600">Rejoignez-nous dès maintenant</p>
+            </div>
+
+            <!-- Form Card -->
+            <div
+                class="bg-white rounded-lg p-8 border border-neutral-200 shadow-sm"
+            >
+                <form id="signup-form" class="flex flex-col gap-4">
+                    <div>
+                        <label
+                            class="block text-sm font-semibold text-neutral-900 mb-2"
+                        >
+                            Email
+                        </label>
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="votre@email.com"
+                            required
+                            class="w-full px-4 py-3 border border-neutral-300 rounded-md bg-white text-neutral-900 focus:outline-none focus:ring-2 focus:ring-[#1f3c7a] focus:border-transparent"
+                        />
+                    </div>
+
+                    <div>
+                        <label
+                            class="block text-sm font-semibold text-neutral-900 mb-2"
+                        >
+                            Mot de passe
+                        </label>
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="••••••••"
+                            required
+                            class="w-full px-4 py-3 border border-neutral-300 rounded-md bg-white text-neutral-900 focus:outline-none focus:ring-2 focus:ring-[#1f3c7a] focus:border-transparent"
+                        />
+                    </div>
+
+                    <div>
+                        <label
+                            class="block text-sm font-semibold text-neutral-900 mb-2"
+                        >
+                            Confirmer le mot de passe
+                        </label>
+                        <input
+                            type="password"
+                            name="passwordConfirm"
+                            placeholder="••••••••"
+                            required
+                            class="w-full px-4 py-3 border border-neutral-300 rounded-md bg-white text-neutral-900 focus:outline-none focus:ring-2 focus:ring-[#1f3c7a] focus:border-transparent"
+                        />
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="w-full bg-gradient-to-r from-[#1f3c7a] to-[#2a4ba8] hover:from-[#1b356c] hover:to-[#244a95] text-white font-semibold py-3 px-6 rounded-md transition duration-200 mt-4"
+                    >
+                        Créer un compte
+                    </button>
+                </form>
+
+                <!-- Status Message -->
+                <p id="status" class="mt-6 text-center text-sm font-medium"></p>
+            </div>
+
+            <!-- Additional Links -->
+            <div class="text-center mt-6">
+                <p class="text-neutral-600 text-sm">
+                    Déjà inscrit ?
+                    <a
+                        href="/login"
+                        class="text-[#1f3c7a] hover:text-[#1b356c] font-semibold"
+                    >
+                        Se connecter
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+</Layout>
+
+<script>
+    //@ts-nocheck
+    const form = document.getElementById("signup-form");
+    const status = document.getElementById("status");
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+
+        try {
+            const res = await fetch("/api/signup", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    email: formData.get("email"),
+                    password: formData.get("password"),
+                    passwordConfirm: formData.get("passwordConfirm"),
+                }),
+                credentials: "include",
+            });
+
+            if (res.ok) {
+                status.textContent = "✅ Compte créé ! Redirection...";
+                status.classList.add("text-green-600");
+                setTimeout(() => {
+                    window.location.href = "/login";
+                }, 1500);
+            } else {
+                const error = await res.json();
+                status.textContent =
+                    "❌ " + (error.error || "Erreur lors de l'inscription");
+                status.classList.add("text-red-600");
+            }
+        } catch (error) {
+            console.error("Erreur:", error);
+            status.textContent = "❌ Erreur de connexion";
+            status.classList.add("text-red-600");
+        }
+    });
+</script>
