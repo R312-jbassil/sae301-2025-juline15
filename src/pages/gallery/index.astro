@@ -75,10 +75,10 @@ try {
                                 {lunette?.nom_svg || "Design sans nom"}
                             </h3>
 
-                            <div class="bg-neutral-100 rounded-lg p-4 flex items-center justify-center h-48 mb-4">
+                            <div class="bg-neutral-100 rounded-lg p-4 flex items-center justify-center h-48 mb-4 overflow-hidden">
                                 <div
                                     set:html={lunette?.code_svg}
-                                    class="max-w-full max-h-full"
+                                    class="w-full h-full flex items-center justify-center"
                                 />
                             </div>
 
