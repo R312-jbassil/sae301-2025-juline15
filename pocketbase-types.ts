@@ -12,7 +12,6 @@ export enum Collections {
 	Otps = "_otps",
 	Superusers = "_superusers",
 	Commande = "commande",
-	Compose = "compose",
 	Constitue = "constitue",
 	Lunette = "lunette",
 	Materiau = "materiau",
@@ -114,19 +113,11 @@ export type CommandeRecord = {
 	updated: IsoAutoDateString
 }
 
-export type ComposeRecord = {
-	created: IsoAutoDateString
-	id: string
-	id_lunette?: RecordIdString
-	libelle_materiau_branche?: RecordIdString
-	updated: IsoAutoDateString
-}
-
 export type ConstitueRecord = {
 	created: IsoAutoDateString
 	id: string
 	id_lunette?: RecordIdString
-	libelle_materiau_monture?: RecordIdString
+	libelle_materiau?: RecordIdString
 	updated: IsoAutoDateString
 }
 
@@ -198,7 +189,6 @@ export type MfasResponse<Texpand = unknown> = Required<MfasRecord> & BaseSystemF
 export type OtpsResponse<Texpand = unknown> = Required<OtpsRecord> & BaseSystemFields<Texpand>
 export type SuperusersResponse<Texpand = unknown> = Required<SuperusersRecord> & AuthSystemFields<Texpand>
 export type CommandeResponse<Texpand = unknown> = Required<CommandeRecord> & BaseSystemFields<Texpand>
-export type ComposeResponse<Texpand = unknown> = Required<ComposeRecord> & BaseSystemFields<Texpand>
 export type ConstitueResponse<Texpand = unknown> = Required<ConstitueRecord> & BaseSystemFields<Texpand>
 export type LunetteResponse<Texpand = unknown> = Required<LunetteRecord> & BaseSystemFields<Texpand>
 export type MateriauResponse<Texpand = unknown> = Required<MateriauRecord> & BaseSystemFields<Texpand>
@@ -215,7 +205,6 @@ export type CollectionRecords = {
 	_otps: OtpsRecord
 	_superusers: SuperusersRecord
 	commande: CommandeRecord
-	compose: ComposeRecord
 	constitue: ConstitueRecord
 	lunette: LunetteRecord
 	materiau: MateriauRecord
@@ -231,7 +220,6 @@ export type CollectionResponses = {
 	_otps: OtpsResponse
 	_superusers: SuperusersResponse
 	commande: CommandeResponse
-	compose: ComposeResponse
 	constitue: ConstitueResponse
 	lunette: LunetteResponse
 	materiau: MateriauResponse
