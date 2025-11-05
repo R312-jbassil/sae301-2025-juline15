@@ -3,11 +3,16 @@ import { Collections } from "../../utils/pocketbase-types";
 
 export async function POST({ request }) {
     const data = await request.json();
+    const user = request.headers.get("x-user-id"); 
+
     console.log("Received data to save:", data);
     try {
         const record = await pb
             .collection(Collections.Lunette)
-            .create(data);
+            .create({
+                ...data,
+                user: user, 
+            });
         console.log("SVG saved with ID:", record.id);
 
         return new Response(JSON.stringify({ success: true, id: record.id }), {

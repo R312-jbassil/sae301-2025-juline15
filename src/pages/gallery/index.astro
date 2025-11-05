@@ -5,14 +5,22 @@ import Layout from "../../layouts/Layout.astro";
 
 export const prerender = false;
 
+const user = Astro.locals.user;
+
+// Redirection si pas d'utilisateur
+if (!user) {
+    return Astro.redirect("/login");
+}
+
 let lunettes = [];
 
 try {
     lunettes = await pb.collection(Collections.Lunette).getFullList(200, {
         sort: "-created",
+        filter: `user = "${user.id}"`, // Filtre par utilisateur
     });
 } catch (error) {
-    console.error("Erreur lors de la récupération des SVGs :", error);
+    console.error("Erreur lors de la récupération des designs :", error);
 }
 ---
 

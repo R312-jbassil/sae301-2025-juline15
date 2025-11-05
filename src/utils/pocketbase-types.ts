@@ -153,6 +153,7 @@ export type LunetteRecord = {
 	nom_svg?: string
 	prix_lunette?: number
 	taille_verre?: LunetteTailleVerreOptions
+	user?: RecordIdString
 	updated: IsoAutoDateString
 }
 

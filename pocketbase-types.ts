@@ -154,6 +154,7 @@ export type LunetteRecord = {
 	prix_lunette?: number
 	taille_verre?: LunetteTailleVerreOptions
 	updated: IsoAutoDateString
+	user?: RecordIdString
 }
 
 export type MateriauRecord = {
