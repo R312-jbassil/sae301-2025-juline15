@@ -15,11 +15,11 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '20'
+        node-version: '18'
         cache: 'npm'
 
     - name: Install dependencies
-      run: npm ci
+      run: npm i
       
     - name: Build project
       run: |
@@ -47,7 +47,7 @@ jobs:
         port: 22013
         script: |
           cd /var/www/tavue/server
-          npm ci
+          npm i
           npm install astro
           npm install send server-destroy
           PORT=4322 pm2 restart tavue || PORT=4322 pm2 start entry.mjs --name tavue
