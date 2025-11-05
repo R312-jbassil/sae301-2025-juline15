@@ -90,6 +90,8 @@ if (Astro.locals.user) {
         const formData = new FormData(form);
 
         try {
+            console.log("📤 Avant la requête - Cookies:", document.cookie);
+
             const res = await fetch("/api/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -97,15 +99,24 @@ if (Astro.locals.user) {
                     email: formData.get("email"),
                     password: formData.get("password"),
                 }),
-                credentials: "include", // Important !
+                credentials: "include",
             });
 
+            console.log("📥 Après la requête - Cookies:", document.cookie);
+            console.log("📥 Response status:", res.status);
+
             if (res.ok) {
+                const data = await res.json();
+                console.log("✅ Réponse API:", data);
+
                 status.textContent = "✅ Connexion réussie !";
                 status.classList.add("text-green-600");
+
+                // Attendre 3 secondes pour voir les logs
                 setTimeout(() => {
+                    console.log("🔄 Redirection...");
                     window.location.href = "/gallery";
-                }, 1000);
+                }, 3000);
             } else {
                 const error = await res.json();
                 status.textContent =
@@ -113,7 +124,7 @@ if (Astro.locals.user) {
                 status.classList.add("text-red-600");
             }
         } catch (error) {
-            console.error("Erreur:", error);
+            console.error("❌ Erreur:", error);
             status.textContent = "❌ Erreur de connexion";
             status.classList.add("text-red-600");
         }
