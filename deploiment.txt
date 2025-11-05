@@ -1,0 +1,7 @@
+Url de l'application web :
+
+Lien vers le dépôt github : https://github.com/R312-jbassil/sae301-2025-juline15
+
+Compte admin du pocketbase sur le VPS : 
+    - login : adam.juline@gmail.com
+    - mot de passe : Sae301juline*

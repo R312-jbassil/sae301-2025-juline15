@@ -1,3 +1,11 @@
+---
+interface Props {
+    user?: any;
+}
+
+const { user } = Astro.props;
+---
+
 <header
     class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur border-b border-neutral-200/60 shadow-[0_6px_24px_-4px_rgba(0,0,0,0.25),0_2px_6px_rgba(0,0,0,0.12)]"
 >
@@ -32,6 +40,13 @@
                 >
                     Se connecter
                 </a>
+                <form method="POST" action="/api/logout" class="m-0 p-0 ml-4">
+                    <button
+                        type="submit"
+                        class="inline-flex items-center rounded-full border border-neutral-300 px-3 py-1.5 text-sm text-neutral-800 hover:bg-neutral-100 transition"
+                        >Déconnexion</button
+                    >
+                </form>
             </nav>
 
             <button
